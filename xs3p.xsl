@@ -183,7 +183,7 @@
    <xsl:variable name="ATTR_INDENT">1</xsl:variable>
 
    <!-- Title to use if none provided -->
-   <xsl:variable name="DEFAULT_TITLE">XML Schema Documentation</xsl:variable>
+   <xsl:variable name="DEFAULT_TITLE">BuildingSync Schema Documentation</xsl:variable>
 
    <!-- Prefixes used for anchor names -->
       <!-- Type definitions -->
@@ -307,8 +307,8 @@
             </script>
 
          </head>
-         <body data-spy="scroll" data-target=".xs3p-sidebar" data-offset="65">
-
+         <body>
+            <button onclick="topFunction()" id="scroll-btn" class="btn btn-default" title="Go to top">Back to top</button>
             <div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
                <div class="container">
                   <div class="navbar-header">
@@ -442,18 +442,23 @@
                   });
                });
 
-               $(window).scroll(function() {
-                  if ($(".xs3p-sidebar").css("position") == "fixed" &amp;&amp; $(window).height() &lt; $(".xs3p-sidebar").height()) {
-                     var perc = $(window).scrollTop() / $("#xs3p-content").height();
-                     var overflow = $(".xs3p-sidebar").height() + 105 - $(window).height();
-                     $(".xs3p-sidebar").css("top", (65 - Math.round(overflow * perc)) + "px");
+               //Get the button
+               var mybutton = document.getElementById("scroll-btn");
+
+               // When the user scrolls down 20px from the top of the document, show the button
+               window.onscroll = function() {scrollFunction()};
+
+               function scrollFunction() {
+                  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                     mybutton.style.display = "block";
+                  } else {
+                     mybutton.style.display = "none";
                   }
-               });
-               $(window).resize(function() {
-                  if ($(".xs3p-sidebar").css("position") == "fixed") {
-                     $(".xs3p-sidebar").css("top", "65px");
-                  }
-               });
+               }
+               topFunction = () => {
+                  document.body.scrollTop = 0;
+                  document.documentElement.scrollTop = 0;
+               }
                </xsl:text>
             </script>
          </body>
@@ -684,7 +689,7 @@
          </xsl:choose>
          <xsl:text>: </xsl:text>
          <!-- Name -->
-         <a id="{$componentID}" class="name" data-html="true" data-placement="bottom" data-toggle="tooltip" title="Schema component name.">
+         <a id="{$componentID}" href="#{$componentID}" class="name" data-html="true" data-placement="bottom" data-toggle="tooltip" title="Schema component name.">
             <xsl:value-of select="$component/@name"/>
          </a>
       </h3>
@@ -733,6 +738,10 @@ code {
 
 .nav-sub-item &gt; a {
     padding-left: 30px !important;
+}
+
+.panel-collapse {
+    overflow-x: scroll;
 }
 
 a.name {
@@ -813,7 +822,7 @@ pre {
     max-width: 400px;
 }
 
-// Syntax highlighting
+/* Syntax highlighting */
 .codehilite .err {color: #FFF; background-color: #D2322D; font-weight: bold;} /* Error */
 .codehilite .c   {color: #999;}
 .codehilite .cs  {color: #999; font-style: italic;}
@@ -824,12 +833,15 @@ pre {
 .codehilite a       {color: inherit !important; text-decoration: underline !important;}
 .codehilite a:hover {opacity: 0.7 !important;}
 
-@media (min-width: 992px) {
-    .xs3p-sidebar {
-        position: fixed;
-        top: 65px;
-        width: 22%;
-    }
+/* scroll to top button */
+#scroll-btn {
+   display: none;
+   position: fixed;
+   bottom: 20px;
+   left: 30px;
+   z-index: 99;
+   cursor: pointer;
+   padding: 15px;
 }
 </xsl:text>
    </xsl:template>
